@@ -17,6 +17,7 @@ $factory->define(Post::class, function (Faker $faker) {
         'excerpt' => $faker->text(rand(250, 300)),
         'body' => $faker->paragraphs(rand(10, 15), true),
         'image' => rand(0, 1) == 1 ? $image : null,
+        'view_count' => rand(1, 10) * 10,
         'created_at' => $dates,
         'updated_at' => $dates,
         'published_at' => $i < 5 ? $dates : (rand(0, 1) == 0 ? null : $dates->addDays(4)),
