@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\User;
 use App\Post;
 use Illuminate\Http\Request;
 
@@ -27,7 +28,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Display a listing of cateogires.
+     * Display a listing of posts belonging to category.
      *
      * @return \Illuminate\Http\Response
      */
@@ -44,6 +45,24 @@ class BlogController extends Controller
 
         return view("blog.index", compact('posts', 'categoryName'));
 
+    }
+
+    /**
+     * Display a listing of posts belonging to author.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function author(User $author)
+    {
+        $authorName = $author->name;
+
+        $posts = $author->posts()
+                        ->with('category')
+                        ->latestFirst()
+                        ->published()
+                        ->simplePaginate($this->limit);
+
+        return view("blog.index", compact('posts', 'authorName'));
     }
 
     /**
