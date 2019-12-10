@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Http\Requests\PostRequest;
 use App\Post;
 use Illuminate\Http\Request;
-use App\Http\Requests\PostRequest;
+use Intervention\Image\Facades\Image;
 
 class BlogController extends BackendController
 {
@@ -14,7 +15,7 @@ class BlogController extends BackendController
     public function __construct()
     {
         parent::__construct();
-        $this->uploadPath = public_path('img');
+        $this->uploadPath = public_path(config('cms.image.directory'));
     }
     /**
      * Display a listing of the resource.
@@ -56,13 +57,24 @@ class BlogController extends BackendController
     {
         $data = $request->all();
 
-        if($request->hasFile('image')) 
-        {
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $fileName = $image->getClientOriginalName();
             $destination = $this->uploadPath;
 
-            $image->move($destination, $fileName);
+            $successUpload = $image->move($destination, $fileName);
+
+            if ($successUpload) {
+                $width = config('cms.image.thumbnail.width');
+                $height = config('cms.image.thumbnail.height');
+
+                $extension = $image->getClientOriginalExtension();
+                $thumbnail = str_replace(".{$extension}", "_thumbnail.{$extension}", $fileName);
+
+                Image::make($destination . '/' . $fileName)
+                    ->resize($width, $height)
+                    ->save($destination . '/' . $thumbnail);
+            }
 
             $data['image'] = $fileName;
         }
