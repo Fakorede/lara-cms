@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    protected $fillable = ['view_count'];
+    protected $fillable = ['view_count', 'title', 'slug', 'excerpt', 'body', 'published_at', 'category_id'];
     protected $dates = ['published_at'];
 
     public function author()
@@ -68,6 +68,11 @@ class Post extends Model
         }
 
         return $imageUrl;
+    }
+
+    public function setPublishedAtAttribute($value)
+    {
+        $this->attributes['published_at'] = $value ?? NULL;
     }
 
     public function dateFormatted($showTimes = false)
