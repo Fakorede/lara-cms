@@ -25,86 +25,18 @@
         <!-- Main content -->
         <section class="content">
             <div class="row">
-              <div class="col-xs-12">
-                <div class="box">
-                  <div class="box-body ">
-                    {!! 
-                        Form::model($post, [
-                            'method' => 'POST',
-                            'route' => 'blog.store',
-                            'files' => TRUE
-                        ])
-                    !!}
+              {!! 
+                  Form::model($post, [
+                      'method' => 'POST',
+                      'route' => 'blog.store',
+                      'files' => TRUE,
+                      'id' => 'post-form'
+                  ])
+              !!}
 
-                        <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
-                            {!! Form::label('title') !!}
-                            {!! Form::text('title', null, ['class' => 'form-control']) !!}
+              @include('backend.blog.form')
 
-                            @if($errors->has('title'))
-                              <span class="help-block">{{ $errors->first('title') }}</span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('slug') ? 'has-error' : '' }}">
-                            {!! Form::label('slug') !!}
-                            {!! Form::text('slug', null, ['class' => 'form-control']) !!}
-
-                            @if ($errors->has('slug'))
-                              <span class="help-block">{{ $errors->first('slug') }}</span>
-                            @endif
-                        </div>
-
-                        <div class="form-group excerpt">
-                            {!! Form::label('excerpt') !!}
-                            {!! Form::textarea('excerpt', null, ['class' => 'form-control']) !!}
-                        </div>
-
-                        <div class="form-group {{ $errors->has('body') ? 'has-error' : '' }}">
-                            {!! Form::label('body') !!}
-                            {!! Form::textarea('body', null, ['class' => 'form-control']) !!}
-
-                            @if ($errors->has('body'))
-                              <span class="help-block">{{ $errors->first('body') }}</span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('published_at') ? 'has-error' : '' }}">
-                            {!! Form::label('published_at', 'Publication Date') !!}
-                            {!! Form::text('published_at', null, ['class' => 'form-control', 'placeholder' => 'Y-m-d H:i:s']) !!}
-
-                            @if ($errors->has('published_at'))
-                              <span class="help-block">{{ $errors->first('published_at') }}</span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('category_id') ? 'has-error' : '' }}">
-                            {!! Form::label('category_id', 'Category') !!}
-                            {!! Form::select('category_id', App\Category::pluck('title', 'id'), null, ['class' => 'form-control', 'placeholder' => 'Choose Category']) !!}
-
-                            @if ($errors->has('category_id'))
-                              <span class="help-block">{{ $errors->first('category_id') }}</span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('image') ? 'has-error' : '' }}">
-                            {!! Form::label('image', 'Feature Image') !!}
-                            {!! Form::file('image') !!}
-
-                            @if ($errors->has('image'))
-                              <span class="help-block">{{ $errors->first('image') }}</span>
-                            @endif
-                        </div>
-
-                        <hr>
-
-                        {!! Form::submit('Create Post', ['class' => 'btn btn-primary']) !!}
-
-                    {!! Form::close() !!}
-                  </div>
-                  <!-- /.box-body -->
-                </div>
-                <!-- /.box -->
-              </div>
+              {!! Form::close() !!}
             </div>
           <!-- ./row -->
         </section>
@@ -113,22 +45,4 @@
       <!-- /.content-wrapper -->
 @endsection
 
-@section('script')
-    <script>
-        $('ul.pagination').addClass('no-margin pagination-sm');
-
-        $('#title').on('blur', function() {
-          var title = this.value.toLowerCase().trim();
-          var slugInput = $('#slug');
-          var slug = title.replace(/&/g, '-and-')
-                          .replace(/[^a-z0-9-]+/g, '-')
-                          .replace(/\-\-+/g, '-')
-                          .replace(/^-+|-+$/g, '');
-
-          slugInput.val(slug);
-        });
-
-        var simplemde1 = new SimpleMDE({ element: $("#excerpt")[0] });
-        var simplemde2 = new SimpleMDE({ element: $("#body")[0] });
-    </script>
-@endsection
+@include('backend.blog.script')

@@ -101,7 +101,8 @@ class BlogController extends BackendController
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view("blog.edit", compact("post"));
     }
 
     /**

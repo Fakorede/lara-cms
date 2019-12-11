@@ -29,7 +29,9 @@
                 <div class="box">
                     <div class="box-header">
                         <div class="pull-left">
-                            <a href="{{ route('blog.create') }}" class="btn btn-info">Add New</a>
+                            <a href="{{ route('blog.create') }}" class="btn btn-info">
+                              <i class="fa fa-plus"></i>Add New
+                            </a>
                         </div>
                     </div>
                   <!-- /.box-header -->
