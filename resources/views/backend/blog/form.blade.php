@@ -82,7 +82,7 @@
             <div class="form-group {{ $errors->has('image') ? 'has-error' : '' }}">
                 <div class="fileinput fileinput-new" data-provides="fileinput">
                     <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                        <img src="http://placehold.it/200x150&text=No+Image" alt="featured image">
+                        <img src="{{ $post->image_thumb_url ?? 'http://placehold.it/200x150&text=No+Image' }}" alt="featured image">
                     </div>
                     <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
                     <div>
