@@ -53,35 +53,6 @@ class BlogController extends BackendController
         return redirect('/backend/blog/')->with('message', 'Post created successfully!');
     }
 
-    private function handleRequest($request)
-    {
-        $data = $request->all();
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $fileName = $image->getClientOriginalName();
-            $destination = $this->uploadPath;
-
-            $successUpload = $image->move($destination, $fileName);
-
-            if ($successUpload) {
-                $width = config('cms.image.thumbnail.width');
-                $height = config('cms.image.thumbnail.height');
-
-                $extension = $image->getClientOriginalExtension();
-                $thumbnail = str_replace(".{$extension}", "_thumbnail.{$extension}", $fileName);
-
-                Image::make($destination . '/' . $fileName)
-                    ->resize($width, $height)
-                    ->save($destination . '/' . $thumbnail);
-            }
-
-            $data['image'] = $fileName;
-        }
-
-        return $data;
-    }
-
     /**
      * Display the specified resource.
      *
@@ -129,6 +100,50 @@ class BlogController extends BackendController
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id)->delete();
+        return redirect('/backend/blog')->with('trash-message', ['Post has been moved to trash!', $id]);
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->restore();
+
+        return redirect('/backend/blog')->with('message', 'Post has been restored from trash!');
+    }
+
+    private function handleRequest($request)
+    {
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = $image->getClientOriginalName();
+            $destination = $this->uploadPath;
+
+            $successUpload = $image->move($destination, $fileName);
+
+            if ($successUpload) {
+                $width = config('cms.image.thumbnail.width');
+                $height = config('cms.image.thumbnail.height');
+
+                $extension = $image->getClientOriginalExtension();
+                $thumbnail = str_replace(".{$extension}", "_thumbnail.{$extension}", $fileName);
+
+                Image::make($destination . '/' . $fileName)
+                    ->resize($width, $height)
+                    ->save($destination . '/' . $thumbnail);
+            }
+
+            $data['image'] = $fileName;
+        }
+
+        return $data;
     }
 }
