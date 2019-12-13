@@ -9,7 +9,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', 'BlogController@index')->name('blog');
 
@@ -23,4 +23,5 @@ Auth::routes();
 Route::get('/home', 'Backend\HomeController@index')->name('home');
 
 Route::put('/backend/blog/restore/{blog}', 'Backend\BlogController@restore')->name('blog.restore');
+Route::delete('/backend/blog/force-destroy/{blog}', 'Backend\BlogController@forceDestroy')->name('blog.force-destroy');
 Route::resource('/backend/blog', 'Backend\BlogController');
