@@ -96,7 +96,14 @@ class BlogController extends BackendController
     public function update(PostRequest $request, $id)
     {
         $post = Post::findOrFail($id);
+        $oldImage = $post->image;
         $data = $this->handleRequest($request);
+
+        if($oldImage !== $post->image)
+        {
+            $this->removeImage($oldImage);
+        }
+
         $post->update($data);
 
         return redirect('/backend/blog/')->with('message', 'Post updated successfully!');
@@ -122,7 +129,11 @@ class BlogController extends BackendController
      */
     public function forceDestroy($id)
     {
-        $post = Post::withTrashed()->findOrFail($id)->forceDelete();
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->forceDelete();
+
+        $this->removeImage($post->image);
+
         return redirect('/backend/blog?status=trash')->with('message', 'Post has been deleted successfully!');
     }
 
@@ -138,6 +149,20 @@ class BlogController extends BackendController
         $post->restore();
 
         return redirect('/backend/blog')->with('message', 'Post has been restored from trash!');
+    }
+
+    private function removeImage($image)
+    {
+        if(!empty($image))
+        {
+            $imagePath = $this->uploadPath . '/' . $image;
+            $ext = substr(strrchr($image, '.'), 1);
+            $thumbnail = str_replace(".{$ext}", "_thumbnail.{$ext}", $image);
+            $thumbnailPath = $this->uploadPath . '/' . $thumbnail;
+
+            if(file_exists($imagePath)) unlink($imagePath);
+            if(file_exists($thumbnailPath)) unlink($thumbnailPath);
+        }
     }
 
     private function handleRequest($request)

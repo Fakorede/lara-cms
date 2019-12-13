@@ -65,7 +65,7 @@ class Post extends Model
         if (!is_null($this->image)) {
             $directory = config('cms.image.directory');
             $ext = substr(strrchr($this->image, '.'), 1);
-            $thumbnail = str_replace(".{$ext}", "_thumb.{$ext}", $this->image);
+            $thumbnail = str_replace(".{$ext}", "_thumbnail.{$ext}", $this->image);
             $imagePath = public_path() . "/{$directory}/" . $thumbnail;
 
             if (file_exists($imagePath)) {
