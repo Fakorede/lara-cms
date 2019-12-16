@@ -14,6 +14,10 @@ class Post extends Model
     protected $fillable = ['title', 'slug', 'excerpt', 'body', 'published_at', 'category_id', 'image'];
     protected $dates = ['published_at'];
 
+    /**
+     * Relationships
+     */
+
     public function author()
     {
         return $this->belongsTo(User::class);
@@ -76,10 +80,18 @@ class Post extends Model
         return $imageUrl;
     }
 
+    /**
+     * Mutators
+     */
+
     public function setPublishedAtAttribute($value)
     {
         $this->attributes['published_at'] = $value ?? null;
     }
+
+    /**
+     * methods
+     */
 
     public function dateFormatted($showTimes = false)
     {
@@ -113,6 +125,16 @@ class Post extends Model
     public function scopePublished($query)
     {
         return $query->where('published_at', '<=', Carbon::now());
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->where('published_at', '>', Carbon::now());
+    }
+
+    public function scopeDraft($query)
+    {
+        return $query->whereNull('published_at');
     }
 
     public function scopePopular($query)
