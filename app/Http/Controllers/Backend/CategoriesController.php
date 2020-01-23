@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Category;
 use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Http\Request;
 
 class CategoriesController extends BackendController
@@ -41,6 +42,7 @@ class CategoriesController extends BackendController
     public function store(CategoryStoreRequest $request)
     {
         Category::create($request->all());
+
         return redirect("/backend/categories")->with("message", "New Category successfully created!");
     }
 
@@ -63,7 +65,8 @@ class CategoriesController extends BackendController
      */
     public function edit($id)
     {
-        //
+        $category = Category::findOrFail($id);
+        return view("backend.categories.edit", compact('category'));
     }
 
     /**
@@ -73,9 +76,11 @@ class CategoriesController extends BackendController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryUpdateRequest $request, $id)
     {
-        //
+        Category::findOrFail($id)->update($request->all());
+
+        return redirect("/backend/categories")->with("message", "Category successfully updated!");
     }
 
     /**
