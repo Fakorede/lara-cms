@@ -18,10 +18,16 @@ Route::get('/blog/{post}', 'BlogController@show')->name('show');
 Route::get('/category/{category}', 'BlogController@category')->name('category');
 Route::get('/author/{author}', 'BlogController@author')->name('author');
 
+// Route::auth()
+
 Auth::routes();
 
 Route::get('/home', 'Backend\HomeController@index')->name('home');
 
 Route::put('/backend/blog/restore/{blog}', 'Backend\BlogController@restore')->name('blog.restore');
+
 Route::delete('/backend/blog/force-destroy/{blog}', 'Backend\BlogController@forceDestroy')->name('blog.force-destroy');
+
 Route::resource('/backend/blog', 'Backend\BlogController');
+
+Route::resource('/backend/categories', 'Backend\CategoriesController');

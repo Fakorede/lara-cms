@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Category;
+use App\Http\Requests\CategoryStoreRequest;
 use Illuminate\Http\Request;
 
 class CategoriesController extends BackendController
@@ -16,7 +17,7 @@ class CategoriesController extends BackendController
     {
         $categories = Category::with('posts')->orderBy('title')->paginate($this->limit);
         $categoriesCount = Category::count();
-        
+
         return view("backend.categories.index", compact('categories', 'categoriesCount'));
     }
 
@@ -27,7 +28,8 @@ class CategoriesController extends BackendController
      */
     public function create()
     {
-        //
+        $category = new Category();
+        return view("backend.categories.create", compact('category'));
     }
 
     /**
@@ -36,9 +38,10 @@ class CategoriesController extends BackendController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        //
+        Category::create($request->all());
+        return redirect("/backend/categories")->with("message", "New Category successfully created!");
     }
 
     /**
